@@ -55,6 +55,7 @@ export class LedgerWebSocketBridge {
                                 const reply: Buffer = await u2fTransport.exchange(Buffer.from(await blobToArrayBuffer(dataBlob)));
                                 socket.send(reply);
                             } catch (ex) {
+                                socket.close();
                                 reject(ex);
                             }
                         } else if (ev.data && typeof ev.data === "string") {
