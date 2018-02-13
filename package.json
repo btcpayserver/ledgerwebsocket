@@ -1,0 +1,30 @@
+{
+  "name": "ledgerwebsocket",
+  "version": "1.0.0",
+  "description": "A bridge between ledger U2F transport and websocket to allow a backend to send command to ledger",
+  "main": "dist/ledgerwebsocket.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "cd tests && mocha -r ts-node/register *.spec.ts"
+  },
+  "author": "Nicolas Dorier",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^9.4.2",
+    "babel-runtime": "^6.26.0",
+    "budo": "^11.1.0",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
+    "ts-loader": "^3.5.0",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.6.0",
+    "typescript": "^2.7.1",
+    "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-transport-u2f": "^3.0.0"
+  }
+}
