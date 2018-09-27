@@ -32,6 +32,7 @@ export class LedgerWebSocketBridge {
     }
 
     public timeoutSeconds: number = 20;
+    public scrambleKey: string = "BTC";
 
     public sendCommand(command: string, exta_args?: string, timeoutSeconds?: number): Promise<any> {
         const socketConnectionPath: string = this.path + "?command=" + command + (exta_args ? "&" + exta_args : "");
@@ -47,7 +48,7 @@ export class LedgerWebSocketBridge {
                 .then(transport => {
                     const u2fTransport: TransportU2F = transport as TransportU2F;
                     u2fTransport.exchangeTimeout = timeoutSeconds * 1000;
-                    u2fTransport.setScrambleKey("BTC");
+                    u2fTransport.setScrambleKey(this.scrambleKey);
                     socket.onmessage = async (ev) => {
                         if (ev.data && ev.data instanceof Blob) {
                             const dataBlob: Blob = ev.data as Blob;
