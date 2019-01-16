@@ -33,6 +33,7 @@ export class LedgerWebSocketBridge {
 
     public timeoutSeconds: number = 20;
     public scrambleKey: string = "BTC";
+    currentOperation: Promise<void> = Promise.resolve();
 
     public sendCommand(command: string, exta_args?: string, timeoutSeconds?: number): Promise<any> {
         const socketConnectionPath: string = this.path + "?command=" + command + (exta_args ? "&" + exta_args : "");
@@ -52,13 +53,16 @@ export class LedgerWebSocketBridge {
                     socket.onmessage = async (ev) => {
                         if (ev.data && ev.data instanceof Blob) {
                             const dataBlob: Blob = ev.data as Blob;
-                            try {
-                                const reply: Buffer = await u2fTransport.exchange(Buffer.from(await blobToArrayBuffer(dataBlob)));
-                                socket.send(reply);
-                            } catch (ex) {
-                                socket.close();
-                                reject(ex);
-                            }
+                            this.currentOperation = this.currentOperation
+                                .then(async () => {
+                                    try {
+                                        const reply: Buffer = await u2fTransport.exchange(Buffer.from(await blobToArrayBuffer(dataBlob)));
+                                        socket.send(reply);
+                                    } catch (ex) {
+                                        socket.close();
+                                        reject(ex);
+                                    }
+                                });
                         } else if (ev.data && typeof ev.data === "string") {
                             socket.close();
                             resolve(JSON.parse(ev.data));
